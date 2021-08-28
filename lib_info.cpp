@@ -13,7 +13,7 @@ using namespace std;
 //Borrowed from assignment instructions
 struct Song {
     string title;
-    int time;  // could also be a string
+    string time;  // could also be a string
     int track;
 };
 
@@ -35,9 +35,10 @@ struct Artist {
  * converts it to an integer
  * and exports the total time in seconds. 
  */
-int timeConvertMtoS(string, string){
+int timeConvertMtoS(string){
 	string min, sec;
 	int minutes, seconds, totsec;
+	getline(
 	minutes = stoi(min);
 	minutes = stoi(sec);
 	return totsec = (minutes * 60) + seconds;
@@ -54,9 +55,22 @@ string timeConvertStoM(int)
 	minutes = seconds / 60;
 	return minutes + ": " +rem;
 }
+//function to print the output
+void print(){
+	// still need to write this
+}
 
 int main(){
+	string song, time, artist, album, genre;
+	int track;
+	// Reads in lines from the file as long as they exist
+	while(cin >> song >> time  >> artist >> album >> genre >> track){
+		Song s1(song, track, time) ;
+		timeConvertMtoS(time); // calls time function
 
+
+	}
+	
 	return 0;
 }
 
