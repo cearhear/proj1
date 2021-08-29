@@ -65,10 +65,11 @@ void readFile(string file, map<string, Artist> &musicLibrary){
 	ifstream infile(file);
 	string line, songName, time, artistName, albumName, genre;
 	int track; 
-	istringstream iss(line); 
+	istringstream iss; 
 	
 	
 	while (getline(infile, line)){
+		iss.str(line);
 		iss >> songName >> time >> artistName >> albumName >> genre >> track; //reads in values and assigns to variables
 		fixUnderscores(songName);
 		fixUnderscores(artistName);
