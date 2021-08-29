@@ -69,7 +69,6 @@ void readFile(string file, map<string, Artist> &musicLibrary){
 	
 	
 	while (getline(infile, line)){
-		iss.clear();
 		iss >> songName >> time >> artistName >> albumName >> genre >> track; //reads in values and assigns to variables
 		fixUnderscores(songName);
 		fixUnderscores(artistName);
