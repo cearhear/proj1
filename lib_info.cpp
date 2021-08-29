@@ -98,7 +98,6 @@ void readFile(string file, map<string, Artist> &musicLibrary){
 		//updating times
 		musicLibrary[artistName].albums[albumName].time += song.time;
 		musicLibrary[artistName].time += song.time;
-		//cout<< title << " " << timeConvertMtoS(time) << endl; //testing
 		
 	}
 	infile.close();
@@ -107,14 +106,12 @@ void readFile(string file, map<string, Artist> &musicLibrary){
 void printLibrary(map <string, Artist> &musicLibrary){
 
 	
-	for(auto artist_it = musicLibrary.begin(); artist_it != musicLibrary.end(); ++artist_it){
-		cout << artist_it->first << ": " << artist_it->second.nsongs << ", "<< timeConvertStoM(artist_it->second.time) << "\n";
-		Artist &artIt = artist_it->second;		
-		for(auto album_it = artIt.albums.begin(); album_it != artIt.albums.end(); ++album_it){
-			cout << "        " << album_it->first << ": " << album_it->second.songs.size() <<", " << timeConvertStoM(album_it->second.time) << "\n";
-			Album &albIt = album_it->second;
-			for(auto song_it = albIt.songs.begin(); song_it != albIt.songs.end(); ++song_it){
-				cout << "                " << song_it->first << ". " << song_it->second.title << ": " << timeConvertStoM(song_it->second.time) << "\n";
+	for(auto const&artist_it : musicLibrary){
+		cout << artist_it.first << ": " << artist_it.second.nsongs << ", "<< timeConvertStoM(artist_it.second.time) << "\n";
+		for(auto const&album_it : artist_it.second.albums){
+			cout << "        " << album_it.first << ": " << album_it.second.songs.size() <<", " << timeConvertStoM(album_it.second.time) << "\n";
+			for(auto const&song_it : album_it.second.songs){
+				cout << "                " << song_it.first << ". " << song_it.second.title << ": " << timeConvertStoM(song_it.second.time) << "\n";
 			}
 		}
 	}
