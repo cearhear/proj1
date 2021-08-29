@@ -12,6 +12,7 @@
 #include<string>
 #include<algorithm>
 #include<map>
+#include<set>
 
 using namespace std;
 
@@ -59,18 +60,43 @@ int main(int argc, char *argv[]){
 void readFile(string file){
 
 	ifstream infile(file);
-	string line, song, time, artist, album, genre;
+	string line, songName, time, artistName, albumName, genre;
 	int track; 
 	istringstream iss(line); 
+	map<string, Artist> musicLibrary;
 	
 	while (getline(infile, line)){
 		iss.clear();
-		iss >> song >> time >> artist >> album >> genre >> track; //reads in values and assigns to variables
-		fixUnderscores(song);
-		fixUnderscores(artist);
-		fixUnderscores(album);		
+		iss >> songName >> time >> artistName >> albumName >> genre >> track; //reads in values and assigns to variables
+		fixUnderscores(songName);
+		fixUnderscores(artistName);
+		fixUnderscores(albumName);
+		Song song = {songName, timeConvertMtoS(time), track};
+		//creates new artist instance if artist is not in library
+		//used this as a refresher for checking contents of map
+		//https://www.geeksforgeeks.org/map-count-function-in-c-stl/
+		if(!musicLibrary.count(artistName)){
+			Artist artist;
+			artist.name = artistName;
+			artist.time = 0;
+			artist.nsongs = 0;
+			musicLibrary.insert(make_pair(artistName, artist));
+		}
+		//creates new album instance if album is not in library
+		if(!musicLibrary[artistName].albums.count(albumName)){
+			Album album;
+			album.name = albumName;
+			musicLibrary[artistName].albums.insert(make_pair(albumName, album));
+		}
+		
+		//adds song to album
+		musicLibrary[artistName].albums[albumName].songs.insert(make_pair(track, song));
+		musicLibrary[artistName].nsongs++;
+		//updating times
+		musicLibrary[artistName].albums[albumName].time += song.time;
+		musicLibrary[artistName].time += song.time;
 		//cout<< title << " " << timeConvertMtoS(time) << endl; //testing
-	
+		
 	}
 	infile.close();
 }
