@@ -65,15 +65,15 @@ void readFile(string file, map<string, Artist> &musicLibrary){
 	ifstream infile(file);
 	string line, songName, time, artistName, albumName, genre;
 	int track; 
-	istringstream iss; 
+	//istringstream iss; 
 	
 	
 	while (getline(infile, line)){
-		iss.str(line);
+		istringstream iss(line);
 		iss >> songName >> time >> artistName >> albumName >> genre >> track; //reads in values and assigns to variables
 		fixUnderscores(songName);
 		fixUnderscores(artistName);
-		fixUnderscores(albumName);
+		fixUnderscores(albumName);;
 		Song song = {songName, timeConvertMtoS(time), track};
 		//creates new artist instance if artist is not in library
 		//used this as a refresher for checking contents of map
