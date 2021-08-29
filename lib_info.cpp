@@ -7,6 +7,7 @@
  */
 #include<iostream>
 #include<iomanip>
+#include<stdlib.h>
 #include<fstream>
 #include<sstream>
 #include<string>
@@ -37,7 +38,8 @@ struct Artist {
     int nsongs;
 };
 
-void readFile(string file);
+void readFile(string file, map<string, Artist> &musicLibrary);
+void printLibrary(map<string, Artist> &musicLibrary);
 void fixUnderscores(string &s);
 int timeConvertMtoS(string time);
 string timeConvertStoM(int time);
@@ -45,8 +47,9 @@ string timeConvertStoM(int time);
 int main(int argc, char *argv[]){
 	string song, time, artist, album, genre;
 	int track;
-	readFile(argv[1]);
-
+	map<string, Artist> musicLibrary;
+	readFile(argv[1], musicLibrary);
+	printLibrary(musicLibrary);
 	
 	return 0;
 }
@@ -57,13 +60,13 @@ int main(int argc, char *argv[]){
  * Source: https://stackoverflow.com/questions/7868936/read-file-line-by-line-using-ifstream-in-c
  * https://stackoverflow.com/questions/2896600/how-to-replace-all-occurrences-of-a-character-in-string
 */
-void readFile(string file){
+void readFile(string file, map<string, Artist> &musicLibrary){
 
 	ifstream infile(file);
 	string line, songName, time, artistName, albumName, genre;
 	int track; 
 	istringstream iss(line); 
-	map<string, Artist> musicLibrary;
+	
 	
 	while (getline(infile, line)){
 		iss.clear();
@@ -101,26 +104,37 @@ void readFile(string file){
 	infile.close();
 }
 
+void printLibrary(map <string, Artist> &musicLibrary){
+
+	
+	for(auto artist_it = musicLibrary.begin(); artist_it != musicLibrary.end(); ++artist_it){
+		cout << artist_it->first << ": " << artist_it->second.nsongs << ", "<< timeConvertStoM(artist_it->second.time) << "\n";
+		Artist &artIt = artist_it->second;		
+		for(auto album_it = artIt.albums.begin(); album_it != artIt.albums.end(); ++album_it){
+			cout << "        " << album_it->first << ": " << album_it->second.songs.size() <<", " << timeConvertStoM(album_it->second.time) << "\n";
+			Album &albIt = album_it->second;
+			for(auto song_it = albIt.songs.begin(); song_it != albIt.songs.end(); ++song_it){
+				cout << "                " << song_it->first << ". " << song_it->second.title << ": " << timeConvertStoM(song_it->second.time) << "\n";
+			}
+		}
+	}
+}
+
 void fixUnderscores(string &s){
 	replace(s.begin(), s.end(), '_', ' ');
 }
 
 /*
- * Takes in the imported time as a string,
- * seperates it, converts it to an integer
+ * Takes in the imported time as a string
+ * converts it to an integer
  * and exports the total time in seconds. 
+ * https://stackoverflow.com/questions/24270236/how-to-convert-formatted-string-hhmmss-to-seconds-in-c
  */
 int timeConvertMtoS(string time){
-	int totsec, minutes, seconds;
-	string min, sec;
-
-	min=time.substr(0, time.find(":"));
-	sec=time.substr(time.find(":") + 1);
-	
-	minutes=stoi(min);
-	seconds=stoi(sec);
-	
-	return totsec = (minutes * 60) + seconds;
+	int mins = 0, secs = 0;
+	sscanf(time.c_str(), "%d:%d",&mins,&secs);
+	secs = (mins*60) + secs;
+	return secs;
 }
 
 
