@@ -6,6 +6,7 @@
  *			artist and album.
  */
 #include<iostream>
+#include<iomanip>
 #include<fstream>
 #include<sstream>
 #include<string>
@@ -35,6 +36,49 @@ struct Artist {
     int nsongs;
 };
 
+void readFile(string file);
+void fixUnderscores(string &s);
+int timeConvertMtoS(string time);
+string timeConvertStoM(int time);
+
+int main(int argc, char *argv[]){
+	string song, time, artist, album, genre;
+	int track;
+	readFile(argv[1]);
+
+	
+	return 0;
+}
+
+
+/*
+ * Reads in file and converts all underscores to spaces 
+ * Source: https://stackoverflow.com/questions/7868936/read-file-line-by-line-using-ifstream-in-c
+ * https://stackoverflow.com/questions/2896600/how-to-replace-all-occurrences-of-a-character-in-string
+*/
+void readFile(string file){
+
+	ifstream infile(file);
+	string line, song, time, artist, album, genre;
+	int track; 
+	istringstream iss(line); 
+	
+	while (getline(infile, line)){
+		iss.clear();
+		iss >> song >> time >> artist >> album >> genre >> track; //reads in values and assigns to variables
+		fixUnderscores(song);
+		fixUnderscores(artist);
+		fixUnderscores(album);		
+		//cout<< title << " " << timeConvertMtoS(time) << endl; //testing
+	
+	}
+	infile.close();
+}
+
+void fixUnderscores(string &s){
+	replace(s.begin(), s.end(), '_', ' ');
+}
+
 /*
  * Takes in the imported time as a string,
  * seperates it, converts it to an integer
@@ -53,48 +97,22 @@ int timeConvertMtoS(string time){
 	return totsec = (minutes * 60) + seconds;
 }
 
-/*
- * Reads in file and converts all underscores to spaces 
- * Source: https://stackoverflow.com/questions/7868936/read-file-line-by-line-using-ifstream-in-c
- * https://stackoverflow.com/questions/2896600/how-to-replace-all-occurrences-of-a-character-in-string
-*/
-void readFile(string file){
-
-	fstream infile(file);
-	string line, title, time, artist, album, genre;
-	int track; 
-	
-	while (getline(infile, line)){
-		istringstream iss(line); 
-		//replace(line.begin(), line.end(), '_', ' '); //this line will remove underscores (I'm not sure where to place it)
-		iss >> title >> time >> artist >> album >> genre >> track; //reads in values and assigns to variables
-				
-		//cout<< title << " " << timeConvertMtoS(time) << endl; //testing
-	
-	}
-	infile.close();
-}
 
 /* 
  * Takes in a time integer as seconds,
  * calculates the minutes and remaining seconds,
  * and exports it in the form MM:SS
  */
-string timeConvertStoM(int)
+string timeConvertStoM(int time)
 {
-	int seconds, minutes, rem;
-	string time;
-	minutes = seconds / 60;
-	return minutes + ": " +rem;
+	string formattedTime;
+	stringstream ss;
+	int minutes = 0, seconds = 0;
+	minutes = time / 60;
+	seconds = time % 60;
+	ss << minutes << ":" << setfill('0') << setw(2) << seconds;
+	return formattedTime = ss.str();
 }
 
-int main(int argc, char *argv[]){
-	string song, time, artist, album, genre;
-	int track;
-	readFile(argv[1]);
-
-	
-	return 0;
-}
 
 
