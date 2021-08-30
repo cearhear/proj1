@@ -63,20 +63,11 @@ void readFile(string file, map<string, Artist> &musicLibrary){
 	ifstream infile(file);
 	string line, songName, time, artistName, albumName, genre;
 	int track; 
-<<<<<<< HEAD
-
-	
-	
-	while (getline(infile, line)){
-		istringstream iss(line);
-		iss >> songName >> time >> artistName >> albumName >> genre >> track; //reads in values and assigns to variables
-=======
 	
 	while (getline(infile, line)){
 		istringstream iss(line); //reads in the string
 		iss >> songName >> time >> artistName >> albumName >> genre >> track; // reads in values and assigns to variables
 		
->>>>>>> 9e8c77b498f890068d288e763757c9fd3b397aa4
 		fixUnderscores(songName);
 		fixUnderscores(artistName);
 		fixUnderscores(albumName);;
@@ -114,7 +105,6 @@ void readFile(string file, map<string, Artist> &musicLibrary){
 }
 
 /*
-<<<<<<< HEAD
  *used this as a reference for iterating with range based for loop
  *https://stackoverflow.com/questions/52057135/what-is-the-type-of-an-auto-const-map-iterator-c
 */
@@ -123,16 +113,6 @@ void printLibrary(map <string, Artist> &musicLibrary){
 	for(auto const&artist_it : musicLibrary){
 		cout << artist_it.first << ": " << artist_it.second.nsongs << ", "<< timeConvertStoM(artist_it.second.time) << "\n";
 		for(auto const&album_it : artist_it.second.albums){
-=======
- * Prints out the music library by moving through the maps
- * Source: https://stackoverflow.com/questions/14070940/how-can-i-print-out-c-map-values/55278718
- */
-void printLibrary(map <string, Artist> &musicLibrary){
-	for(auto const&artist_it : musicLibrary){ // Prints out the artists
-		cout << artist_it.first << ": " << artist_it.second.nsongs << ", "<< timeConvertStoM(artist_it.second.time) << "\n"; 
-		
-		for(auto const&album_it : artist_it.second.albums){ // Prints out the albums
->>>>>>> 9e8c77b498f890068d288e763757c9fd3b397aa4
 			cout << "        " << album_it.first << ": " << album_it.second.songs.size() <<", " << timeConvertStoM(album_it.second.time) << "\n";
 			
 			for(auto const&song_it : album_it.second.songs){ // Prints out the songs
