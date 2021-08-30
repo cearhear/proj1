@@ -17,7 +17,7 @@
 
 using namespace std;
 
-//Borrowed from assignment instructions
+// Structures borrowed from assignment instructions
 struct Song {
     string title;
     int time;  
@@ -46,7 +46,9 @@ string timeConvertStoM(int time);
 int main(int argc, char *argv[]){
 
 	map<string, Artist> musicLibrary;
+	
 	readFile(argv[1], musicLibrary);
+	
 	printLibrary(musicLibrary);
 	
 	return 0;
@@ -56,26 +58,35 @@ int main(int argc, char *argv[]){
 /*
  * Reads in file and converts all underscores to spaces 
  * Source: https://stackoverflow.com/questions/7868936/read-file-line-by-line-using-ifstream-in-c
- * https://stackoverflow.com/questions/2896600/how-to-replace-all-occurrences-of-a-character-in-string
 */
 void readFile(string file, map<string, Artist> &musicLibrary){
-
 	ifstream infile(file);
 	string line, songName, time, artistName, albumName, genre;
 	int track; 
+<<<<<<< HEAD
 
 	
 	
 	while (getline(infile, line)){
 		istringstream iss(line);
 		iss >> songName >> time >> artistName >> albumName >> genre >> track; //reads in values and assigns to variables
+=======
+	
+	while (getline(infile, line)){
+		istringstream iss(line); //reads in the string
+		iss >> songName >> time >> artistName >> albumName >> genre >> track; // reads in values and assigns to variables
+		
+>>>>>>> 9e8c77b498f890068d288e763757c9fd3b397aa4
 		fixUnderscores(songName);
 		fixUnderscores(artistName);
-		fixUnderscores(albumName);
+		fixUnderscores(albumName);;
+		
 		Song song = {songName, timeConvertMtoS(time), track};
-		//creates new artist instance if artist is not in library
-		//used this as a refresher for checking contents of map
-		//https://www.geeksforgeeks.org/map-count-function-in-c-stl/
+		
+		/* 
+		 * Creates new artist instance if artist is not in the music library
+		 * Source: https://www.geeksforgeeks.org/map-count-function-in-c-stl/
+		 */
 		if(!musicLibrary.count(artistName)){
 			Artist artist;
 			artist.name = artistName;
@@ -83,17 +94,18 @@ void readFile(string file, map<string, Artist> &musicLibrary){
 			artist.nsongs = 0;
 			musicLibrary.insert(make_pair(artistName, artist));
 		}
-		//creates new album instance if album is not in library
+		// Creates new album instance if album is not in library
 		if(!musicLibrary[artistName].albums.count(albumName)){
 			Album album;
 			album.name = albumName;
 			musicLibrary[artistName].albums.insert(make_pair(albumName, album));
 		}
 		
-		//adds song to album
+		// Adds song to album & increases song count
 		musicLibrary[artistName].albums[albumName].songs.insert(make_pair(track, song));
 		musicLibrary[artistName].nsongs++;
-		//updating times
+		
+		// Updates times for artist & album
 		musicLibrary[artistName].albums[albumName].time += song.time;
 		musicLibrary[artistName].time += song.time;
 		
@@ -102,6 +114,7 @@ void readFile(string file, map<string, Artist> &musicLibrary){
 }
 
 /*
+<<<<<<< HEAD
  *used this as a reference for iterating with range based for loop
  *https://stackoverflow.com/questions/52057135/what-is-the-type-of-an-auto-const-map-iterator-c
 */
@@ -110,28 +123,46 @@ void printLibrary(map <string, Artist> &musicLibrary){
 	for(auto const&artist_it : musicLibrary){
 		cout << artist_it.first << ": " << artist_it.second.nsongs << ", "<< timeConvertStoM(artist_it.second.time) << "\n";
 		for(auto const&album_it : artist_it.second.albums){
+=======
+ * Prints out the music library by moving through the maps
+ * Source: https://stackoverflow.com/questions/14070940/how-can-i-print-out-c-map-values/55278718
+ */
+void printLibrary(map <string, Artist> &musicLibrary){
+	for(auto const&artist_it : musicLibrary){ // Prints out the artists
+		cout << artist_it.first << ": " << artist_it.second.nsongs << ", "<< timeConvertStoM(artist_it.second.time) << "\n"; 
+		
+		for(auto const&album_it : artist_it.second.albums){ // Prints out the albums
+>>>>>>> 9e8c77b498f890068d288e763757c9fd3b397aa4
 			cout << "        " << album_it.first << ": " << album_it.second.songs.size() <<", " << timeConvertStoM(album_it.second.time) << "\n";
-			for(auto const&song_it : album_it.second.songs){
+			
+			for(auto const&song_it : album_it.second.songs){ // Prints out the songs
 				cout << "                " << song_it.first << ". " << song_it.second.title << ": " << timeConvertStoM(song_it.second.time) << "\n";
 			}
 		}
 	}
 }
 
+/*
+ * Replaces underscores with a space
+ * Source: https://stackoverflow.com/questions/2896600/how-to-replace-all-occurrences-of-a-character-in-string
+ */
 void fixUnderscores(string &s){
 	replace(s.begin(), s.end(), '_', ' ');
 }
 
 /*
- * Takes in the imported time as a string
- * converts it to an integer
+ * Takes in the imported time as a string,
+ * converts it to an integer,
  * and exports the total time in seconds. 
- * https://stackoverflow.com/questions/24270236/how-to-convert-formatted-string-hhmmss-to-seconds-in-c
+ * Source: https://stackoverflow.com/questions/24270236/how-to-convert-formatted-string-hhmmss-to-seconds-in-c
  */
 int timeConvertMtoS(string time){
 	int mins = 0, secs = 0;
+	
 	sscanf(time.c_str(), "%d:%d",&mins,&secs);
+	
 	secs = (mins*60) + secs;
+	
 	return secs;
 }
 
@@ -141,14 +172,16 @@ int timeConvertMtoS(string time){
  * calculates the minutes and remaining seconds,
  * and exports it in the form MM:SS
  */
-string timeConvertStoM(int time)
-{
+string timeConvertStoM(int time){
 	string formattedTime;
 	stringstream ss;
 	int minutes = 0, seconds = 0;
+	
 	minutes = time / 60;
 	seconds = time % 60;
-	ss << minutes << ":" << setfill('0') << setw(2) << seconds;
+	
+	ss << minutes << ":" << setfill('0') << setw(2) << seconds; // ensures proper formating
+	
 	return formattedTime = ss.str();
 }
 
