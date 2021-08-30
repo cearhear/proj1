@@ -20,7 +20,7 @@ using namespace std;
 //Borrowed from assignment instructions
 struct Song {
     string title;
-    int time;  // could also be a string
+    int time;  
     int track;
 };
 
@@ -28,7 +28,6 @@ struct Album {
     map <int, Song > songs;
     string name;
     int time;
-    int nsongs;  // optional variable but makes it easier
 };
 
 struct Artist {
@@ -45,8 +44,7 @@ int timeConvertMtoS(string time);
 string timeConvertStoM(int time);
 
 int main(int argc, char *argv[]){
-	string song, time, artist, album, genre;
-	int track;
+
 	map<string, Artist> musicLibrary;
 	readFile(argv[1], musicLibrary);
 	printLibrary(musicLibrary);
@@ -65,11 +63,11 @@ void readFile(string file, map<string, Artist> &musicLibrary){
 	ifstream infile(file);
 	string line, songName, time, artistName, albumName, genre;
 	int track; 
-	istringstream iss; 
+
 	
 	
 	while (getline(infile, line)){
-		iss.str(line);
+		istringstream iss(line);
 		iss >> songName >> time >> artistName >> albumName >> genre >> track; //reads in values and assigns to variables
 		fixUnderscores(songName);
 		fixUnderscores(artistName);
@@ -103,9 +101,12 @@ void readFile(string file, map<string, Artist> &musicLibrary){
 	infile.close();
 }
 
+/*
+ *used this as a reference for iterating with range based for loop
+ *https://stackoverflow.com/questions/52057135/what-is-the-type-of-an-auto-const-map-iterator-c
+*/
 void printLibrary(map <string, Artist> &musicLibrary){
 
-	
 	for(auto const&artist_it : musicLibrary){
 		cout << artist_it.first << ": " << artist_it.second.nsongs << ", "<< timeConvertStoM(artist_it.second.time) << "\n";
 		for(auto const&album_it : artist_it.second.albums){
